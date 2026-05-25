@@ -120,7 +120,7 @@ do
 		
 		RETURN_CODE_BEFORE=$?
 		
-		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $1)
+		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 runs/before_"$BUG".txt)
 		echo "line: $raw_line"
 		test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | head -n 1 | tr -d '()' | xargs)
 		

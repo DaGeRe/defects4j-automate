@@ -17,7 +17,6 @@ To execute the basic configuration, run the following steps:
 Attach do the container (`docker exec -it $CONTAINER bash`) and run the following steps:
 - `cd /home/defects4j && ./init.sh`
 - `cd project_repos/ && unzip defects4j-repos-v3.zip && mv defects4j/project_repos/* .`
-- `curl -fsSL https://opencode.ai/install | bash`
 
 By default, it is assumed that ollama is running on 172.17.0.1:11430 and gemma4:31b should be used; if this is not the case, configure `~/.config/opencode/opencode.json`.
 
