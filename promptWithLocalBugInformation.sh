@@ -6,7 +6,7 @@ function fixBug {
 	
 	FOLDER="/tmp/lang_"$BUG"_buggy"
 	
-	(cd $FOLDER && opencode run --format json "Execute pwd using bash and then fix mvn clean test -Dtest=$test")
+	(cd $FOLDER && opencode run --format json "Execute pwd using bash and then fix mvn clean test -Dtest=$test The fix should be applied to $location")
 }
 export -f fixBug
 
@@ -62,7 +62,7 @@ do
 			echo "$BUG skipped_no_failing_test" >> bugs.txt
 		else
 			echo "Fixing $test in $BUG"
-			location=$(git diff --name-only D4J_Lang_"$BUG"_BUGGY_VERSION..D4J_Lang_"$BUG"_FIXED_VERSION | grep .java)
+			location=$(cd /tmp/lang_"$BUG"_buggy/ && git diff --name-only D4J_Lang_"$BUG"_BUGGY_VERSION..D4J_Lang_"$BUG"_FIXED_VERSION | grep .java)
 			echo "Location hint: $location"
 			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location'" &> runs/fixing_"$BUG".txt
 		
