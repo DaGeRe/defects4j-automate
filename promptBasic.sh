@@ -123,12 +123,17 @@ do
 		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 runs/before_"$BUG".txt)
 		echo "line: $raw_line"
 		test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | head -n 1 | tr -d '()' | xargs)
+		if [ -z $test ]; then
+			test=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
+		fi
+		if [ -z $test ]; then
+			test=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | awk -F'[()]' '{print $2}' | xargs)
+		fi
 		
+		echo "Test: $test"
 		if [ -z "$test" ]
 		then
 			echo "No failing tests; skipping bug $BUG"
-			echo "Failed: $testFailed"
-			echo "Error: $testError"
 			echo "$BUG skipped_no_failing_test" >> bugs.txt
 		else
 			echo "Fixing $test in $BUG"
