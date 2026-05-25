@@ -6,7 +6,7 @@ function fixBug {
 	
 	FOLDER="/tmp/lang_"$BUG"_buggy"
 	
-	(cd $FOLDER && opencode run --format json "Execute pwd using bash and then fix mvn clean test -Dtest=$test")
+	(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test")
 }
 export -f fixBug
 
