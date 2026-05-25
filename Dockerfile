@@ -7,4 +7,7 @@ RUN apt install -y curl vim unzip
 RUN cd home && git clone https://github.com/rjust/defects4j
 RUN cd defects4j && cpanm --installdeps .
 
+COPY promptBasic.sh /home/defects4j-automate/
+RUN chmod +x /home/defects4j-automate/promptBasic.sh
+
 ENV PATH="${PATH}:/defects4j/framework/bin"
