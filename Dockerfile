@@ -1,6 +1,6 @@
 FROM ubuntu:26.04
 
-RUN apt update && apt install -y git openjdk-11-jdk cpanminus build-essential
+RUN apt update && apt install -y git openjdk-11-jdk cpanminus build-essential mvn
 RUN apt install -y libdbi-perl libdbd-csv-perl libperl-critic-perl libjson-parse-perl libstring-interpolate-perl
 RUN apt install -y curl vim unzip
 
