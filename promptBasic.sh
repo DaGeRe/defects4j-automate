@@ -120,14 +120,9 @@ do
 		
 		RETURN_CODE_BEFORE=$?
 		
-		testFailed=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
-		testError=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | awk -F'[()]' '{print $2}' | xargs)
-		
-		if [ -n "$testFailed" ]; then
-			test="$testFailed"
-		else
-			test="$testError"
-		fi
+		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $1)
+		echo "line: $raw_line"
+		test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | head -n 1 | tr -d '()' | xargs)
 		
 		if [ -z "$test" ]
 		then
