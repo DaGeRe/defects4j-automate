@@ -109,7 +109,11 @@ do
 		echo "Fixing pom.xml"
 		sed -i 's/<maven.compile.source>1.6<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.6<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' /tmp/lang_"$BUG"_buggy/pom.xml
 		sed -i 's/<maven.compile.source>1.5<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.5<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' /tmp/lang_"$BUG"_buggy/pom.xml
-		sync
+		sed -i 's/<maven.compile.source>1.3<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.3<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' /tmp/lang_"$BUG"_buggy/pom.xml
+		sed -i 's/<maven.compile.source>1.2<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.2<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' /tmp/lang_"$BUG"_buggy/pom.xml
+		sed -i 's/<maven.compile.source>1.1<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.1<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' /tmp/lang_"$BUG"_buggy/pom.xml
+		sed -i '/<artifactId>junit<\/artifactId>/{n;s/<version>3.8.1<\/version>/<version>4.13.2<\/version>/}' /tmp/lang_"${BUG}"_buggy/pom.xml
+		
 		cat /tmp/lang_"$BUG"_buggy/pom.xml | grep "maven.compile"
 
 		(cd /tmp/lang_"$BUG"_buggy/ && mvn clean test) &> runs/before_"$BUG".txt
@@ -125,9 +129,11 @@ do
 			test="$testError"
 		fi
 		
-		if [ -n "$test" ]
+		if [ -z "$test" ]
 		then
 			echo "No failing tests; skipping bug $BUG"
+			echo "Failed: $testFailed"
+			echo "Error: $testError"
 			echo "$BUG skipped_no_failing_test" >> bugs.txt
 		else
 			echo "Fixing $test in $BUG"
