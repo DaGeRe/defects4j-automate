@@ -6,10 +6,11 @@ function fixBug {
 	BUG=$1
 	test=$2
 	location=$3
+	methods=$4
 	
 	FOLDER="/tmp/"$PROJECT"_"$BUG"_buggy"
 	
-	(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test Do not search the repository. The bug is located in the file $location")
+	(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test Do not search the repository. The bug is located in the file $location. It is caused by the methods $methods")
 }
 export -f fixBug
 
@@ -81,7 +82,10 @@ do
 			echo "Fixing $test in $BUG"
 			location=$(cd $PROJECTFOLDER && git diff --name-only D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION..D4J_"$PROJECT"_"$BUG"_FIXED_VERSION | grep .java)
 			echo "Location hint: $location"
-			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location'" &> runs/fixing_"$BUG".txt
+			
+			methods=$(./getDifferingMethods.sh $PROJECTFOLDER D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION D4J_"$PROJECT"_"$BUG"_FIXED_VERSION)
+			
+			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> runs/fixing_"$BUG".txt
 		
 		
 			(cd $PROJECTFOLDER/ && mvn clean test) &> runs/after_"$BUG".txt
