@@ -100,4 +100,6 @@ do
 	
 	echo
 	echo
+	
+	rm -rf $PROJECTFOLDER
 done
