@@ -5,7 +5,7 @@ export PROJECT="${1:-lang}"
 function fixBug {
 	BUG=$1
 	test=$2
-	
+	location=$3
 	
 	FOLDER="/tmp/"$PROJECT"_"$BUG"_buggy"
 	
