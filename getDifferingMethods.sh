@@ -27,5 +27,3 @@ for file in $files; do
 	rm old -r
 	rm new -r
 done
-
-jq -r 'to_entries[] | "\(.key)#\(.value.changedMethods | keys[])"' out.json

@@ -106,8 +106,11 @@ do
 			echo "Location hint: $location"
 			
 			if [ "$MODE" = "informed" ]; then
-				methods=$(./getDifferingMethods.sh $PROJECTFOLDER D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION D4J_"$PROJECT"_"$BUG"_FIXED_VERSION)
+				./getDifferingMethods.sh $PROJECTFOLDER D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION D4J_"$PROJECT"_"$BUG"_FIXED_VERSION
+				methods=$(jq -r 'to_entries[] | "\(.key)#\(.value.changedMethods | keys[])"' $PROJECTFOLDER/out.json)
+				echo "Fix methods: $methods"
 			fi
+			
 			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> runs/fixing_"$BUG".txt
 		
 		
