@@ -12,11 +12,13 @@ cd $1
 files=$(git diff --name-only $2 $3 | grep .java)
 
 for file in $files; do
+	filename=$(basename $file)
+
 	mkdir new
-	git show "$2":$file > new/BeanPropertyWriter.java
+	git show "$2":$file > new/$filename
 
 	mkdir old
-	git show "$3":$file > old/BeanPropertyWriter.java
+	git show "$3":$file > old/$filename
 
 	java -jar $start/nodeDiffDetector/nodeDiffDetector-starter/target/nodeDiffDetector-starter-0.0.3-SNAPSHOT.jar new/ old/
 
