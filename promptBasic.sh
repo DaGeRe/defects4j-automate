@@ -47,6 +47,8 @@ do
 		sed -i 's/<maven.compile.source>1.2<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.2<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $PROJECTFOLDER/pom.xml
 		sed -i 's/<maven.compile.source>1.1<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.1<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $PROJECTFOLDER/pom.xml
 		sed -i '/<artifactId>junit<\/artifactId>/{n;s/<version>3.8.1<\/version>/<version>4.13.2<\/version>/}' $PROJECTFOLDER/pom.xml
+		sed -i 's|<source>1.5</source>|<source>1.8</source>|g' $PROJECTFOLDER/pom.xml
+		sed -i 's|<target>1.5</target>|<target>1.8</target>|g' $PROJECTFOLDER/pom.xml
 		
 		# Fix for JacksonDatabind
 		if [ -f $PROJECTFOLDER/src/main/java/com/fasterxml/jackson/databind/cfg/PackageVersion.java ]; then
@@ -70,6 +72,12 @@ do
 		fi
 		if [ -z $test ]; then
 			test=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | awk -F'[()]' '{print $2}' | xargs)
+		fi
+		if [ -z "$test" ]; then
+			maven_line=$(grep -E "^\[ERROR\] Failures:" -A 1 runs/before_"$BUG".txt | tail -n 1)
+			if [ ! -z "$maven_line" ]; then
+        			test=$(echo "$maven_line" | sed 's/\[ERROR\]//g' | awk -F'.' '{print $1}' | xargs)
+			fi
 		fi
 		
 		echo "Test: $test"
