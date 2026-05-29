@@ -13,10 +13,10 @@ files=$(git diff --name-only $2 $3 | grep .java)
 
 for file in $files; do
 	mkdir new
-	git show "$2":src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java > new/BeanPropertyWriter.java
+	git show "$2":$file > new/BeanPropertyWriter.java
 
 	mkdir old
-	git show "$3":src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java > old/BeanPropertyWriter.java
+	git show "$3":$file > old/BeanPropertyWriter.java
 
 	java -jar $start/nodeDiffDetector/nodeDiffDetector-starter/target/nodeDiffDetector-starter-0.0.3-SNAPSHOT.jar new/ old/
 
