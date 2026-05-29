@@ -16,9 +16,9 @@ RUN cd /home/defects4j/project_repos/ && unzip defects4j-repos-v3.zip && mv defe
 RUN curl -fsSL https://opencode.ai/install | bash
 
 COPY promptBasic.sh /home/defects4j-automate/
-COPY promptWithLocalBugInformation.sh /home/defects4j-automate/
+COPY getDifferingMethods.sh /home/defects4j-automate/
 RUN chmod +x /home/defects4j-automate/promptBasic.sh
-RUN chmod +x /home/defects4j-automate/promptWithLocalBugInformation.sh
+RUN chmod +x /home/defects4j-automate/getDifferingMethods.sh
 
 COPY opencode.json /root/.config/opencode/opencode.json
 
