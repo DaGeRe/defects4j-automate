@@ -2,14 +2,29 @@
 
 export PROJECT="${1:-lang}"
 
+if [[ ! "$MODE" =~ ^(uninformed|semi-informed|informed)$ ]]; then
+	export MODE="uninformed"
+else
+	export $MODE
+fi
+
+echo "Current Mode: $MODE"
+
 function fixBug {
 	BUG=$1
 	test=$2
-	
+	location=$3
+	methods=$4
 	
 	FOLDER="/tmp/"$PROJECT"_"$BUG"_buggy"
 	
-	(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test")
+	if [ "$MODE" = "uninformed" ]; then
+		(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test")
+	elif [ "$MODE" = "semi-informed" ]; then
+		(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test Do not search the repository. The bug is located in the file $location.")
+	elif [ "$MODE" = "informed" ]; then
+		(cd $FOLDER && opencode run --format json "Fix mvn clean test -Dtest=$test Do not search the repository. The bug is located in the file $location. It is caused by the methods $methods")
+	fi
 }
 export -f fixBug
 
@@ -25,7 +40,7 @@ fi
 BUGS=$(cat ../defects4j/framework/projects/$PROJECT/active-bugs.csv | awk -F"," '{print $1}' | grep -v "bug.id")
 
 echo $BUGS
-mv bugs.txt bugs_old.txt
+mv bugs"_$MODE".txt bugs"_$MODE"_old.txt
 
 mkdir -p runs
 
@@ -84,20 +99,26 @@ do
 		if [ -z "$test" ]
 		then
 			echo "No failing tests; skipping bug $BUG"
-			echo "$BUG skipped_no_failing_test" >> bugs.txt
+			echo "$BUG skipped_no_failing_test" >> bugs"_$MODE".txt
 		else
 			echo "Fixing $test in $BUG"
-			timeout --foreground 15m bash -c "fixBug '$BUG' '$test'" &> runs/fixing_"$BUG".txt
+			location=$(cd $PROJECTFOLDER && git diff --name-only D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION..D4J_"$PROJECT"_"$BUG"_FIXED_VERSION | grep .java)
+			echo "Location hint: $location"
+			
+			if [ "$MODE" = "informed" ]; then
+				methods=$(./getDifferingMethods.sh $PROJECTFOLDER D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION D4J_"$PROJECT"_"$BUG"_FIXED_VERSION)
+			fi
+			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> runs/fixing_"$BUG".txt
 		
 		
 			(cd $PROJECTFOLDER/ && mvn clean test) &> runs/after_"$BUG".txt
 			RETURN_CODE_AFTER=$?
-			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $test" >> bugs.txt
+			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $test" >> bugs"_$MODE".txt
 			echo "Fix successful: $RETURN_CODE_AFTER"
 		fi
 	else
 		echo "No pom.xml; skipping bug $BUG"
-		echo "$BUG skipped_no_maven" >> bugs.txt
+		echo "$BUG skipped_no_maven" >> bugs"_$MODE".txt
 	fi
 	
 	echo
