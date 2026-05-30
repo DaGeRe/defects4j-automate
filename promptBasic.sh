@@ -42,7 +42,8 @@ BUGS=$(cat ../defects4j/framework/projects/$PROJECT/active-bugs.csv | awk -F"," 
 echo $BUGS
 mv bugs"_$MODE".txt bugs_"$PROJECT"_"$MODE"_old.txt
 
-mkdir -p runs
+runfolder="runs_"$PROJECT"_"$MODE
+mkdir -p $runfolder
 
 for BUG in $BUGS
 do
@@ -75,21 +76,21 @@ do
 		
 		cat $PROJECTFOLDER/pom.xml | grep "maven.compile"
 
-		(cd $PROJECTFOLDER/ && mvn clean test) &> runs/before_"$BUG".txt
+		(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/before_"$BUG".txt
 		
 		RETURN_CODE_BEFORE=$?
 		
-		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 runs/before_"$BUG".txt)
+		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $runfolder/before_"$BUG".txt)
 		echo "line: $raw_line"
 		test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | head -n 1 | tr -d '()' | xargs)
 		if [ -z $test ]; then
-			test=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
+			test=$(cat $runfolder/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
 		fi
 		if [ -z $test ]; then
-			test=$(cat runs/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | awk -F'[()]' '{print $2}' | xargs)
+			test=$(cat $runfolder/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | awk -F'[()]' '{print $2}' | xargs)
 		fi
 		if [ -z "$test" ]; then
-			maven_line=$(grep -E "^\[ERROR\] Failures:" -A 1 runs/before_"$BUG".txt | tail -n 1)
+			maven_line=$(grep -E "^\[ERROR\] Failures:" -A 1 $runfolder/before_"$BUG".txt | tail -n 1)
 			if [ ! -z "$maven_line" ]; then
         			test=$(echo "$maven_line" | sed 's/\[ERROR\]//g' | awk -F'.' '{print $1}' | xargs)
 			fi
@@ -111,10 +112,10 @@ do
 				echo "Fix methods: $methods"
 			fi
 			
-			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> runs/fixing_"$BUG".txt
+			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> $runfolder/fixing_"$BUG".txt
 		
 		
-			(cd $PROJECTFOLDER/ && mvn clean test) &> runs/after_"$BUG".txt
+			(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/after_"$BUG".txt
 			RETURN_CODE_AFTER=$?
 			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $test" >> bugs"_$MODE".txt
 			echo "Fix successful: $RETURN_CODE_AFTER"
