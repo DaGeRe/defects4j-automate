@@ -40,7 +40,7 @@ fi
 BUGS=$(cat ../defects4j/framework/projects/$PROJECT/active-bugs.csv | awk -F"," '{print $1}' | grep -v "bug.id")
 
 echo $BUGS
-mv bugs"_$MODE".txt bugs_"$PROJECT"_"$MODE"_old.txt
+mv bugs_"$PROJECT"_"$MODE".txt bugs_"$PROJECT"_"$MODE"_old.txt
 
 runfolder="runs_"$PROJECT"_"$MODE
 mkdir -p $runfolder
