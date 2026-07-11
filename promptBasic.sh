@@ -100,7 +100,7 @@ do
 		if [ -z "$test" ]
 		then
 			echo "No failing tests; skipping bug $BUG"
-			echo "$BUG skipped_no_failing_test" >> bugs"_$MODE".txt
+			echo "$BUG skipped_no_failing_test" >> bugs"_"$PROJECT"_"$MODE.txt
 		else
 			echo "Fixing $test in $BUG"
 			location=$(cd $PROJECTFOLDER && git diff --name-only D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION..D4J_"$PROJECT"_"$BUG"_FIXED_VERSION | grep .java)
@@ -117,12 +117,12 @@ do
 		
 			(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/after_"$BUG".txt
 			RETURN_CODE_AFTER=$?
-			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $test" >> bugs"_$MODE".txt
+			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $test" >> bugs"_"$PROJECT"_"$MODE.txt
 			echo "Fix successful: $RETURN_CODE_AFTER"
 		fi
 	else
 		echo "No pom.xml; skipping bug $BUG"
-		echo "$BUG skipped_no_maven" >> bugs"_$MODE".txt
+		echo "$BUG skipped_no_maven" >> bugs_"$PROJECT"_"$MODE".txt
 	fi
 	
 	echo
