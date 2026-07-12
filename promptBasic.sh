@@ -112,12 +112,12 @@ do
 				echo "Fix methods: $methods"
 			fi
 			
-			timeout --foreground 15m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> $runfolder/fixing_"$BUG".txt
+			timeout --foreground 30m bash -c "fixBug '$BUG' '$test' '$location' '$methods'" &> $runfolder/fixing_"$BUG".txt
+			RETURN_CODE_FIXING=$?
 		
-		
-			(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/after_"$BUG".txt
+			timeout --foreground 30m bash -c "(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/after_${BUG}.txt"
 			RETURN_CODE_AFTER=$?
-			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $test" >> bugs"_"$PROJECT"_"$MODE.txt
+			echo "$BUG $RETURN_CODE_BEFORE $RETURN_CODE_AFTER $RETURN_CODE_FIXING $test" >> bugs"_"$PROJECT"_"$MODE.txt
 			echo "Fix successful: $RETURN_CODE_AFTER"
 		fi
 	else
