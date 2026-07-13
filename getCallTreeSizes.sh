@@ -10,6 +10,9 @@ fi
 if [ "$PROJECT" == "JacksonDatabind" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="com.fasterxml.jackson.databind.*"
 fi
+if [ "$PROJECT" == "Jsoup" ]; then
+	export KIEKER_SIGNATURES_INCLUDE="org.jsoup.*"
+fi
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
