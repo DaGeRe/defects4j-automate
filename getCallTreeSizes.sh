@@ -69,8 +69,8 @@ do
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
 			(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$BUG".txt
 			
-			echo -n "TraceLength="
-			cat /tmp/kieker*/kieker*.dat | wc -l
+			echo -n "$PROJECT $BUG TraceLength=" >> tracelength.txt
+			cat /tmp/kieker*/kieker*.dat | wc -l  >> tracelength.txt
 		fi
 	fi
 done
