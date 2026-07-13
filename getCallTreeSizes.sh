@@ -91,7 +91,7 @@ do
 			tracelength=$(cat /tmp/kieker*/kieker*.dat | wc -l)
 			uniquemethods=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $3}' | sort | uniq | wc -l)
 			maxdepth=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $10}' | sort -n | tail -n 1)
-			echo -n "$PROJECT $BUG TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth" >> tracelength.txt
+			echo "$PROJECT $BUG TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth" >> tracelength.txt
 		fi
 	fi
 done
