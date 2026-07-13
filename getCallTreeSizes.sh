@@ -49,7 +49,26 @@ do
 	if [ -f $PROJECTFOLDER/pom.xml ]
 	then
 		fixPomXML $PROJECTFOLDER
-		test="NumberUtilsTest"
+		
+		(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/before_"$BUG".txt
+		
+		RETURN_CODE_BEFORE=$?
+		
+		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $runfolder/before_"$BUG".txt)
+		echo "line: $raw_line"
+		test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | head -n 1 | tr -d '()' | xargs)
+		if [ -z $test ]; then
+			test=$(cat $runfolder/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
+		fi
+		if [ -z $test ]; then
+			test=$(cat $runfolder/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | awk -F'[()]' '{print $2}' | xargs)
+		fi
+		if [ -z "$test" ]; then
+			maven_line=$(grep -E "^\[ERROR\] Failures:" -A 1 $runfolder/before_"$BUG".txt | tail -n 1)
+			if [ ! -z "$maven_line" ]; then
+        			test=$(echo "$maven_line" | sed 's/\[ERROR\]//g' | awk -F'.' '{print $1}' | xargs)
+			fi
+		fi
 		
 		echo "Test: $test"
 		if [ -z "$test" ]
@@ -69,8 +88,10 @@ do
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
 			(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$BUG".txt
 			
-			echo -n "$PROJECT $BUG TraceLength=" >> tracelength.txt
-			cat /tmp/kieker*/kieker*.dat | wc -l  >> tracelength.txt
+			tracelength=$(cat /tmp/kieker*/kieker*.dat | wc -l)
+			uniquemethods=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $3}' | sort | uniq | wc -l)
+			maxdepth=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $10}' | sort -n | tail -n 1)
+			echo -n "$PROJECT $BUG TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth" >> tracelength.txt
 		fi
 	fi
 done
