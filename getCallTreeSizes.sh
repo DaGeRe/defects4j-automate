@@ -82,8 +82,10 @@ do
 		else
 			echo "Getting tree for $test in $BUG"
 			sed -i '/<dependencies>/a <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-simple</artifactId><version>2.0.18</version><scope>test</scope></dependency>' $PROJECTFOLDER/pom.xml
+			
+			AGENT_PATH="-javaagent:"$(pwd)"/kieker-2.0.2-bytebuddy.jar"
 			if ! xmlstarlet sel -t -v "//*[local-name()='plugin']/*[local-name()='artifactId']='maven-surefire-plugin'" "$PROJECTFOLDER/pom.xml" | grep -q "true"; then
-				NEW_PLUGIN="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>-javaagent:$(pwd)/kieker-2.0.2-bytebuddy.jar --add-opens=java.base/java.lang=ALL-UNNAMED</argLine></configuration></plugin>"
+				NEW_PLUGIN="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>$AGENT_PATH --add-opens=java.base/java.lang=ALL-UNNAMED</argLine></configuration></plugin>"
 				sed -i "/<plugins>/a $NEW_PLUGIN" "$PROJECTFOLDER/pom.xml"
 			else
 				xmlstarlet ed -L \
@@ -91,7 +93,7 @@ do
 					-t elem -n "configuration" -v ""   \
 					-s "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin']/*[local-name()='configuration'][not(*[local-name()='argLine'])]" \
 					-t elem -n "argLine" \
-					-v "-javaagent:"$(pwd)"/kieker-2.0.2-bytebuddy.jar --add-opens=java.base/java.lang=ALL-UNNAMED" \
+					-v "$AGENT_PATH --add-opens=java.base/java.lang=ALL-UNNAMED" \
 					$PROJECTFOLDER/pom.xml
 			fi
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
