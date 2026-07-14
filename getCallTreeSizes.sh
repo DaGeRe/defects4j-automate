@@ -89,25 +89,7 @@ do
 		
 		RETURN_CODE_BEFORE=$?
 		
-		raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $runfolder/before_"$BUG".txt)
-		echo "line: $raw_line"
-		test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | grep "Test" | head -n 1 | tr -d '()' | xargs)
-		if [ -z $test ]; then
-			test=$(cat $runfolder/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
-		fi
-		if [ -z $test ]; then
-			test=$(cat $runfolder/before_"$BUG".txt | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep "(" | grep ")" | awk -F'[()]' '{print $2}' | xargs)
-		fi
-		if [ -z "$test" ]; then
-			maven_line=$(grep -E "^\[ERROR\] Failures:" -A 1 $runfolder/before_"$BUG".txt | tail -n 1)
-			echo "maven_line=$maven_line"
-			if [ ! -z "$maven_line" ]; then
-        			test=$(echo "$maven_line" | sed 's/\[ERROR\]//g' | awk -F'.' '{print $1}' | xargs)
-			fi
-		fi
-		if [ -z "$test" ]; then
-			test=$(echo "$raw_line" | tail -n 1 | awk -F':' '{print $1}' | awk -F'.' '{print $1}' | tr -d " ")
-		fi
+		test=$(getTestFromLogfile $runfolder/before_"$BUG".txt)
 		
 		echo "Test: $test"
 		if [ -z "$test" ]
@@ -130,7 +112,7 @@ do
 			topLevelCalls=$(cat /tmp/kieker*/kieker*.dat | grep ";0;0$" | wc -l)
 			echo "$PROJECT $BUG $test TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth topLevelCalls=$topLevelCalls" >> tracelength.txt
 			
-			rm -rf $PROJECTFOLDER
+			# rm -rf $PROJECTFOLDER
 		fi
 	fi
 done
