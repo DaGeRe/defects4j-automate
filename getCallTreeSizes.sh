@@ -29,6 +29,16 @@ export PROJECT="${1:-Lang}"
 
 source commons.sh
 
+if [ -z "${JAVA_HOME}" ]; then
+	echo "\$JAVA_HOME not set"
+	return 1
+fi
+
+if [ ! -d "${JAVA_HOME}" ]; then
+	echo "\$JAVA_HOME points to invalid directory: ${JAVA_HOME}"
+	return 1
+fi
+
 if [ "$PROJECT" == "Lang" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.lang3.*;org.apache.commons.lang.*"
 fi
