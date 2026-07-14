@@ -39,6 +39,6 @@ NR==FNR {
     if (bugid in prob) {
         printf "%s %.4f %.4f %.4f %s %s %s\n", bugid, prob[bugid], steps[bugid], tokens[bugid], trace, methods, depth;
     }
-}' temp_probs.txt temp_length.txt >> $OUTPUT
+}' temp_probs.txt temp_length.txt | grep -v "maxdepth=" >> $OUTPUT
 
 rm temp_probs.txt temp_length.txt
