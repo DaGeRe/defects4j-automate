@@ -14,11 +14,13 @@ for project in Lang JacksonDatabind Jsoup; do
 	uninformed_values=$("$SCRIPT_DIR/analyze.sh" $project | grep " uninformed" | awk '{print $3 / $5}' | getSum)
 	read -r deviation1 mean1 size1 <<< "$uninformed_values"
 
-	echo "uninformed "$uninformed_values
+	echo -n "uninformed "
+	echo $uninformed_values | awk '{printf "%.1f ± %.1f", $2 * 100, $1 * 100}'
+	echo
 	for mode in "semi-informed" "informed"; do
 		echo -n "$mode "
 		current=$("$SCRIPT_DIR/analyze.sh" $project | grep " $mode" | awk '{print $3 / $5}' | getSum)
-		echo -n $current
+		echo $current | awk '{printf "%.1f ± %.1f", $2 * 100, $1 * 100}'
 		read -r deviation2 mean2 size2 <<< "$current"
 		pooled_sd=$(echo "sqrt((($size1-1)*($deviation1^2) + ($size2-1)*($deviation2^2)) / ($size1+$size2-2))" | bc -l)
 		tvalue=$(echo "scale=3; ($mean1 - $mean2) / ($pooled_sd * sqrt(2/$size1))" | bc -l)
