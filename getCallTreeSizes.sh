@@ -31,12 +31,12 @@ source commons.sh
 
 if [ -z "${JAVA_HOME}" ]; then
 	echo "\$JAVA_HOME not set"
-	return 1
+	exit 1
 fi
 
 if [ ! -d "${JAVA_HOME}" ]; then
 	echo "\$JAVA_HOME points to invalid directory: ${JAVA_HOME}"
-	return 1
+	exit 1
 fi
 
 if [ "$PROJECT" == "Lang" ]; then
