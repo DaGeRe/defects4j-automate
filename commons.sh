@@ -13,9 +13,9 @@ get_bug_statistics() {
 
 getTestFromLogfile() {
 	logfile=$1
-	raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $logfile)
+	raw_line=$(grep -E "Failed tests|Tests in error" -A 1 $logfile | sed 's/^[[:space:]]*//')
 	echo "line: $raw_line" >&2
-	test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | grep "Test" | head -n 1 | tr -d '()' | xargs)
+	test=$(echo "$raw_line" | grep -oE '\([^)]+\)' | grep "Test" | grep -v "expected type: " | head -n 1 | tr -d '()' | xargs)
 	if [ -z $test ]; then
 		test=$(cat $logfile | grep "Failed tests\|Tests in error" -A 1 | tail -n 1 | grep -v "(" | awk -F'.' '{print $1}' | xargs)
 	fi
