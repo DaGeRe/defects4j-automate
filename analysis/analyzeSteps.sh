@@ -1,6 +1,6 @@
 
-
-for i in 0 1 2 6 7; do
+echo "# Expected; SuccesNoDoc; FailedGiveUp; AvgTokensSuccess; AvgTokensFailed"
+for i in 0 1 2 3 4 5 6 7; do
 	for project in Lang JacksonDatabind Jsoup; do
 		for mode in uninformed semi-informed informed; do
 			info_file="iteration-$i/bugs_${project}_${mode}.txt"
