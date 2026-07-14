@@ -5,7 +5,7 @@ export PROJECT="${1:-Lang}"
 source commons.sh
 
 if [ "$PROJECT" == "Lang" ]; then
-	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.lang3.*"
+	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.lang3.*;org.apache.commons.lang.*"
 fi
 if [ "$PROJECT" == "JacksonDatabind" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="com.fasterxml.jackson.databind.*"
@@ -42,7 +42,7 @@ do
 	if [ ! -d $PROJECTFOLDER ]
 	then
 		# use "$BUG"f to get the fixed version
-		defects4j checkout -p $PROJECT -v "$BUG"f -w $PROJECTFOLDER
+		defects4j checkout -p $PROJECT -v "$BUG"b -w $PROJECTFOLDER
 		echo "target" >> $PROJECTFOLDER/.gitignore
 	fi
 	
@@ -86,6 +86,8 @@ do
 				-v "-javaagent:"$(pwd)"/kieker-2.0.2-bytebuddy.jar" \
 				$PROJECTFOLDER/pom.xml
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
+			
+			(cd $PROJECTFOLDER && git checkout D4J_"$PROJECT"_"$BUG"_FIXED_VERSION)
 			(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$BUG".txt
 			
 			tracelength=$(cat /tmp/kieker*/kieker*.dat | wc -l)
