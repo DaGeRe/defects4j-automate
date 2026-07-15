@@ -1,3 +1,5 @@
 bugs.txt
-bugs_old.txt
-runs
+bugs_*_old.txt
+runs_*/
+kieker-2.0.2-bytebuddy.jar
+tracelength.txt
