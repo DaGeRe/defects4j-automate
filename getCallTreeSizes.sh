@@ -51,6 +51,10 @@ fi
 if [ "$PROJECT" == "Compress" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.compress.*"
 fi
+if [ "$PROJECT" == "Time" ]; then
+	export KIEKER_SIGNATURES_INCLUDE="org.joda.time.*"
+fi
+
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -84,8 +88,7 @@ do
 		echo "target" >> $PROJECTFOLDER/.gitignore
 	fi
 	
-	if [ -f $PROJECTFOLDER/pom.xml ]
-	then
+	if [ -f $PROJECTFOLDER/pom.xml ]; then
 		fixPomXML $PROJECTFOLDER
 		
 		(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/before_"$BUG".txt
