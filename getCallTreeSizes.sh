@@ -48,6 +48,9 @@ fi
 if [ "$PROJECT" == "Jsoup" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.jsoup.*"
 fi
+if [ "$PROJECT" == "Compress" ]; then
+	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.compress.*"
+fi
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
