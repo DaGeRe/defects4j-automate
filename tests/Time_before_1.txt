@@ -1,0 +1,103 @@
+[INFO] Scanning for projects...
+[WARNING] The project joda-time:joda-time:jar:2.4-SNAPSHOT uses prerequisites which is only intended for maven-plugin projects but not for non maven-plugin projects. For such purposes you should use the maven-enforcer-plugin. See https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
+[INFO] 
+[INFO] ------------------------< joda-time:joda-time >-------------------------
+[INFO] Building Joda-Time 2.4-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/exec-maven-plugin/1.2.1/exec-maven-plugin-1.2.1.pom
+Progress (1): 1.2 kBProgress (1): 3.2 kBProgress (1): 7.1 kBProgress (1): 7.7 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/exec-maven-plugin/1.2.1/exec-maven-plugin-1.2.1.pom (7.7 kB at 16 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/exec-maven-plugin/1.2.1/exec-maven-plugin-1.2.1.jar
+Progress (1): 0.9/38 kBProgress (1): 2.3/38 kBProgress (1): 3.6/38 kBProgress (1): 5.0/38 kBProgress (1): 6.4/38 kBProgress (1): 7.7/38 kBProgress (1): 9.1/38 kBProgress (1): 10/38 kB Progress (1): 12/38 kBProgress (1): 12/38 kBProgress (1): 14/38 kBProgress (1): 15/38 kBProgress (1): 16/38 kBProgress (1): 18/38 kBProgress (1): 19/38 kBProgress (1): 21/38 kBProgress (1): 22/38 kBProgress (1): 23/38 kBProgress (1): 25/38 kBProgress (1): 26/38 kBProgress (1): 27/38 kBProgress (1): 29/38 kBProgress (1): 30/38 kBProgress (1): 31/38 kBProgress (1): 33/38 kBProgress (1): 34/38 kBProgress (1): 36/38 kBProgress (1): 37/38 kBProgress (1): 38 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/exec-maven-plugin/1.2.1/exec-maven-plugin-1.2.1.jar (38 kB at 556 kB/s)
+[WARNING] Parameter 'verbose' is unknown for plugin 'exec-maven-plugin:1.2.1:java (default)'
+Downloading from central: https://repo.maven.apache.org/maven2/org/joda/joda-convert/1.2/joda-convert-1.2.pom
+Progress (1): 966 BProgress (1): 2.3 kBProgress (1): 5.7 kBProgress (1): 9.1 kBProgress (1): 11 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/joda/joda-convert/1.2/joda-convert-1.2.pom (11 kB at 380 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/joda/joda-convert/1.2/joda-convert-1.2.jar
+Progress (1): 0.9/38 kBProgress (1): 2.3/38 kBProgress (1): 3.6/38 kBProgress (1): 5.0/38 kBProgress (1): 6.4/38 kBProgress (1): 7.7/38 kBProgress (1): 12/38 kB Progress (1): 16/38 kBProgress (1): 20/38 kBProgress (1): 25/38 kBProgress (1): 29/38 kBProgress (1): 33/38 kBProgress (1): 37/38 kBProgress (1): 38 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/joda/joda-convert/1.2/joda-convert-1.2.jar (38 kB at 962 kB/s)
+[INFO] 
+[INFO] --- clean:2.5:clean (default-clean) @ joda-time ---
+[INFO] 
+[INFO] --- resources:2.6:resources (default-resources) @ joda-time ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources to META-INF
+[INFO] Copying 9 resources
+[INFO] 
+[INFO] --- compiler:3.1:compile (default-compile) @ joda-time ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 157 source files to /tmp/Time_1_buggy/target/classes
+[INFO] 
+[INFO] >>> exec:1.2.1:java (default) > validate @ joda-time >>>
+[INFO] 
+[INFO] <<< exec:1.2.1:java (default) < validate @ joda-time <<<
+[INFO] 
+[INFO] 
+[INFO] --- exec:1.2.1:java (default) @ joda-time ---
+Writing zoneinfo files
+Writing ZoneInfoMap
+[INFO] 
+[INFO] --- resources:2.6:testResources (default-testResources) @ joda-time ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 32 resources
+[INFO] 
+[INFO] --- compiler:3.1:testCompile (default-testCompile) @ joda-time ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 155 source files to /tmp/Time_1_buggy/target/test-classes
+[INFO] 
+[INFO] --- surefire:2.15:test (default-test) @ joda-time ---
+[INFO] Surefire report directory: /tmp/Time_1_buggy/target/surefire-reports
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit3/2.15/surefire-junit3-2.15.pom
+Progress (1): 1.4 kBProgress (1): 1.7 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit3/2.15/surefire-junit3-2.15.pom (1.7 kB at 8.5 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit3/2.15/surefire-junit3-2.15.jar
+Progress (1): 3.8/26 kBProgress (1): 8.0/26 kBProgress (1): 12/26 kB Progress (1): 13/26 kBProgress (1): 17/26 kBProgress (1): 21/26 kBProgress (1): 26 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit3/2.15/surefire-junit3-2.15.jar (26 kB at 76 kB/s)
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.joda.time.TestAllPackages
+
+TestBuddhistChronology.testCalendar
+
+TestCopticChronology.testCalendar
+
+TestEthiopicChronology.testCalendar
+
+TestIslamicChronology.testCalendar
+
+Testing Gregorian chronology over 1000 iterations
+100% complete (i=1000)
+
+Testing Julian chronology over 1000 iterations
+100% complete (i=1000)
+Writing zoneinfo files
+Writing ZoneInfoMap
+Tests run: 4043, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 7.67 sec <<< FAILURE! - in org.joda.time.TestAllPackages
+testConstructorEx7_TypeArray_intArray(org.joda.time.TestPartial_Constructors)  Time elapsed: 0.01 sec  <<< FAILURE!
+junit.framework.AssertionFailedError
+	at junit.framework.Assert.fail(Assert.java:47)
+	at junit.framework.Assert.fail(Assert.java:53)
+	at org.joda.time.TestPartial_Constructors.testConstructorEx7_TypeArray_intArray(TestPartial_Constructors.java:284)
+
+
+Results :
+
+Failed tests: 
+  org.joda.time.TestPartial_Constructors#testConstructorEx7_TypeArray_intArray AssertionFailedError
+
+Tests run: 4043, Failures: 1, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  34.609 s
+[INFO] Finished at: 2026-07-15T17:16:17+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.15:test (default-test) on project joda-time: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /tmp/Time_1_buggy/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

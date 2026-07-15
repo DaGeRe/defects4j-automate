@@ -22,3 +22,10 @@ source ../commons.sh
 	echo "Expected: GenericTypeId1735Test Was: $testcase"
 	[ "$testcase" = "GenericTypeId1735Test" ]
 }
+
+@test "Check whether example Time output 2 works" {
+	testcase=$(getTestFromLogfile Time_before_1.txt)
+	
+	echo "Expected: org.joda.time.TestPartial_Constructors Was: $testcase"
+	[ "$testcase" = "org.joda.time.TestPartial_Constructors" ]
+}
