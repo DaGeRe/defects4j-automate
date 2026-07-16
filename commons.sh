@@ -70,7 +70,7 @@ fixPomXML() {
 	fi
 	
 	SEVEN_T_TEST_FILE="$project_folder/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZNativeHeapTest.java"
-	if [[ "$bug_id" =~ ^(37|38|39|40|42)$ ]] && [ -f "$SEVEN_T_TEST_FILE" ]; then
+	if [[ "$bug_id" =~ ^(37|38|39|40|41|42)$ ]] && [ -f "$SEVEN_T_TEST_FILE" ]; then
 		ANNOTATION="@org.powermock.core.classloader.annotations.PowerMockIgnore({\"jdk.internal.reflect.*\", \"java.lang.*\", \"java.util.*\"})"
 		
 		sed -i "/public class SevenZNativeHeapTest/i $ANNOTATION" "$SEVEN_T_TEST_FILE"
