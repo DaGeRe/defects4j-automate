@@ -42,6 +42,9 @@ fi
 if [ "$PROJECT" == "Lang" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.lang3.*;org.apache.commons.lang.*"
 fi
+if [ "$PROJECT" == "JacksonCore" ]; then
+	export KIEKER_SIGNATURES_INCLUDE="com.fasterxml.jackson.core.*"
+fi
 if [ "$PROJECT" == "JacksonDatabind" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="com.fasterxml.jackson.databind.*"
 fi

@@ -63,6 +63,11 @@ fixPomXML() {
 		sed -i.bak "/<plugins>/a $COMPILER_PLUGIN" $project_folder/pom.xml
 	fi
 	
+	# Fix for JacksonCore
+	if [ -f $project_folder/src/main/java/com/fasterxml/jackson/core/json/PackageVersion.java ]; then
+		rm -f $project_folder/src/main/java/com/fasterxml/jackson/core/json/PackageVersion.java
+	fi
+	
 	SEVEN_T_TEST_FILE="$project_folder/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZNativeHeapTest.java"
 	if [ "$bug_id" == "41" ] && [ -f "$SEVEN_T_TEST_FILE" ]; then
 		ANNOTATION="@org.powermock.core.classloader.annotations.PowerMockIgnore({\"jdk.internal.reflect.*\", \"java.lang.*\", \"java.util.*\"})"
@@ -74,7 +79,7 @@ fixPomXML() {
 		plugin_block='      <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-javaagent:/home/reichelt/nvme/workspaces/kiekerworkspace/defects4j-automate/kieker-2.0.2-bytebuddy.jar --add-opens=java.base/java.lang=ALL-UNNAMED</argLine>
+          <argLine>--add-opens=java.base/java.lang=ALL-UNNAMED</argLine>
         </configuration>
       </plugin>'
 		awk -v block="$plugin_block" '/<build>/ { print; in_build = 1; next }
