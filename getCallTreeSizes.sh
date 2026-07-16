@@ -77,46 +77,46 @@ if [ ! -f kieker-2.0.2-bytebuddy.jar ]; then
 	wget https://repo1.maven.org/maven2/net/kieker-monitoring/kieker/2.0.2/kieker-2.0.2-bytebuddy.jar
 fi
 
-for BUG in $BUGS
+for bug_id in $BUGS
 do
 	rm -r /tmp/kieker* 
-	PROJECTFOLDER=/tmp/"$PROJECT"_"$BUG"_buggy
+	PROJECTFOLDER=/tmp/"$PROJECT"_"$bug_id"_buggy
 	if [ ! -d $PROJECTFOLDER ]
 	then
 		# use "$BUG"f to get the fixed version
-		defects4j checkout -p $PROJECT -v "$BUG"b -w $PROJECTFOLDER
+		defects4j checkout -p $PROJECT -v "$bug_id"b -w $PROJECTFOLDER
 		echo "target" >> $PROJECTFOLDER/.gitignore
 	fi
 	
 	if [ -f $PROJECTFOLDER/pom.xml ]; then
-		fixPomXML $PROJECTFOLDER $BUG
+		fixPomXML $PROJECTFOLDER $bug_id
 		
-		(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/before_"$BUG".txt
+		(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/before_"$bug_id".txt
 		
 		RETURN_CODE_BEFORE=$?
 		
-		test=$(getTestFromLogfile $runfolder/before_"$BUG".txt)
+		test=$(getTestFromLogfile $runfolder/before_"$bug_id".txt)
 		
 		echo "Test: $test"
 		if [ -z "$test" ]
 		then
-			echo "No failing tests; skipping bug $BUG"
-			echo "$BUG skipped_no_failing_test" >> bugs"_"$PROJECT.txt
+			echo "No failing tests; skipping bug $bug_id"
+			echo "$bug_id skipped_no_failing_test" >> bugs"_"$PROJECT.txt
 		else
-			echo "Getting tree for $test in $BUG"
+			echo "Getting tree for $test in $bug_id"
 			sed -i '/<dependencies>/a <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-simple</artifactId><version>2.0.18</version><scope>test</scope></dependency>' $PROJECTFOLDER/pom.xml
 			
-			editSurefire $PROJECT $PROJECTFOLDER $BUG
+			editSurefire $PROJECT $PROJECTFOLDER $bug_id
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
 			
-			(cd $PROJECTFOLDER && git checkout D4J_"$PROJECT"_"$BUG"_FIXED_VERSION)
-			(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$BUG".txt
+			(cd $PROJECTFOLDER && git checkout D4J_"$PROJECT"_"$bug_id"_FIXED_VERSION)
+			(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$bug_id".txt
 			
 			tracelength=$(cat /tmp/kieker*/kieker*.dat | wc -l)
 			uniquemethods=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $3}' | sort | uniq | wc -l)
 			maxdepth=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $10}' | sort -n | tail -n 1)
 			topLevelCalls=$(cat /tmp/kieker*/kieker*.dat | grep ";0;0$" | wc -l)
-			echo "$PROJECT $BUG $test TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth topLevelCalls=$topLevelCalls" >> tracelength.txt
+			echo "$PROJECT $bug_id $test TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth topLevelCalls=$topLevelCalls" >> tracelength.txt
 			
 			# rm -rf $PROJECTFOLDER
 		fi
