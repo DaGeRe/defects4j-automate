@@ -35,7 +35,9 @@ fi
 if [ "$PROJECT" == "Cli" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.cli2.*"
 fi
-
+if [ "$PROJECT" == "Collections" ]; then
+	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.collections.*;org.apache.commons.collections4.*"
+fi
 
 
 export LANG=en_US.UTF-8
