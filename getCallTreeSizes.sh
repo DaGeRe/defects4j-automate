@@ -32,6 +32,10 @@ fi
 if [ "$PROJECT" == "Time" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.joda.time.*"
 fi
+if [ "$PROJECT" == "Cli" ]; then
+	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.cli2.*"
+fi
+
 
 
 export LANG=en_US.UTF-8

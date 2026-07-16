@@ -75,7 +75,7 @@ fixPomXML() {
 		sed -i "/public class SevenZNativeHeapTest/i $ANNOTATION" "$SEVEN_T_TEST_FILE"
 	fi
 	
-	if [[ "$project_folder" == */JacksonCore* ]]; then
+	if [[ "$project_folder" =~ /(JacksonCore|Cli) ]]; then
 		plugin_block='      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -119,7 +119,7 @@ editSurefire() {
 	else
 		echo "Editing..."
 		if ! xmlstarlet sel -t -v "//*[local-name()='plugin']/*[local-name()='artifactId']='maven-surefire-plugin'" "$project_folder/pom.xml" | grep -q "true"; then
-			new_plugin="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>$agent_path --add-opens=java.base/java.lang=ALL-UNNAMED</argLine></configuration></plugin>"
+			new_plugin="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.2.5</version><configuration><argLine>$agent_path --add-opens=java.base/java.lang=ALL-UNNAMED</argLine></configuration></plugin>"
 			sed -i "/<plugins>/a $new_plugin" "$project_folder/pom.xml"
 		else
 			# add <configuration> and/or <argLine>
