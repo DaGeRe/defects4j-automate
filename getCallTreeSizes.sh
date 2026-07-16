@@ -1,30 +1,5 @@
 #!/bin/bash
 
-editSurefire() {
-	project=$1
-	project_folder=$2
-	bug_id=$3
-		
-	AGENT_PATH="-javaagent:"$(pwd)"/kieker-2.0.2-bytebuddy.jar"
-	if [ "$project" == "Lang" ] && [ "$bug_id" == "47" ]; then
-		NEW_PLUGIN="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>$AGENT_PATH</argLine></configuration></plugin>"
-		sed -i "/<plugins>/a $NEW_PLUGIN" "$project_folder/pom.xml"
-	else
-		if ! xmlstarlet sel -t -v "//*[local-name()='plugin']/*[local-name()='artifactId']='maven-surefire-plugin'" "$project_folder/pom.xml" | grep -q "true"; then
-			NEW_PLUGIN="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>$AGENT_PATH --add-opens=java.base/java.lang=ALL-UNNAMED</argLine></configuration></plugin>"
-			sed -i "/<plugins>/a $NEW_PLUGIN" "$project_folder/pom.xml"
-		else
-			xmlstarlet ed -L \
-				-s "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin'][not(*[local-name()='configuration'])]" \
-				-t elem -n "configuration" -v ""   \
-				-s "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin']/*[local-name()='configuration'][not(*[local-name()='argLine'])]" \
-				-t elem -n "argLine" \
-				-v "$AGENT_PATH --add-opens=java.base/java.lang=ALL-UNNAMED" \
-				$project_folder/pom.xml
-		fi
-	fi
-}
-
 export PROJECT="${1:-Lang}"
 
 source commons.sh

@@ -106,3 +106,36 @@ fixPomXML() {
 	fi
 	cat $project_folder/pom.xml | grep "maven.compile"
 }
+
+editSurefire() {
+	project=$1
+	project_folder=$2
+	bug_id=$3
+		
+	agent_path="-javaagent:"$(pwd)"/kieker-2.0.2-bytebuddy.jar"
+	if [ "$project" == "Lang" ] && [ "$bug_id" == "47" ]; then
+		new_plugin="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>$agent_path</argLine></configuration></plugin>"
+		sed -i "/<plugins>/a $new_plugin" "$project_folder/pom.xml"
+	else
+		echo "Editing..."
+		if ! xmlstarlet sel -t -v "//*[local-name()='plugin']/*[local-name()='artifactId']='maven-surefire-plugin'" "$project_folder/pom.xml" | grep -q "true"; then
+			new_plugin="<plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><argLine>$agent_path --add-opens=java.base/java.lang=ALL-UNNAMED</argLine></configuration></plugin>"
+			sed -i "/<plugins>/a $new_plugin" "$project_folder/pom.xml"
+		else
+			# add <configuration> and/or <argLine>
+			xmlstarlet ed -L \
+				-s "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin'][not(*[local-name()='configuration'])]" \
+				-t elem -n "configuration" -v ""   \
+				-s "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin']/*[local-name()='configuration'][not(*[local-name()='argLine'])]" \
+				-t elem -n "argLine" \
+				-v "$agent_path --add-opens=java.base/java.lang=ALL-UNNAMED" \
+				$project_folder/pom.xml
+				
+			# Update existing <argLine>
+			xmlstarlet ed -L \
+				-u "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin']/*[local-name()='configuration']/*[local-name()='argLine']" \
+				-x "concat('$agent_path ', .)" \
+				$project_folder/pom.xml
+		fi
+	fi
+}
