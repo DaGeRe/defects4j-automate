@@ -39,7 +39,7 @@ if [ "$PROJECT" == "Collections" ]; then
 	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.collections.*;org.apache.commons.collections4.*"
 fi
 if [ "$PROJECT" == "Math" ]; then
-	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.math3.*"
+	export KIEKER_SIGNATURES_INCLUDE="org.apache.commons.math3.*;org.apache.commons.math.*"
 fi
 
 
