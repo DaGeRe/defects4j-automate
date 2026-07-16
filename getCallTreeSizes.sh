@@ -46,7 +46,11 @@ if [ ! -f ../defects4j/framework/projects/$PROJECT/active-bugs.csv ]; then
 	exit 1
 fi
 
-BUGS=$(cat ../defects4j/framework/projects/$PROJECT/active-bugs.csv | awk -F"," '{print $1}' | grep -v "bug.id")
+if [ "$PROJECT" == "Compress" ]; then
+	BUGS=$(cat ../defects4j/framework/projects/$PROJECT/active-bugs.csv | awk -F"," '{print $1}' | grep -v "bug.id" | grep -v '^23$')
+else
+	BUGS=$(cat ../defects4j/framework/projects/$PROJECT/active-bugs.csv | awk -F"," '{print $1}' | grep -v "bug.id" )
+fi
 
 echo $BUGS
 mv bugs_"$PROJECT".txt bugs_"$PROJECT"_old.txt
