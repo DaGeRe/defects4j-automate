@@ -47,6 +47,7 @@ fixPomXML() {
 	sed -i 's/<maven.compile.source>1.6<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.6<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.5<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.5<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compiler.source>1.5<\/maven.compiler.source>/<maven.compiler.source>1.8<\/maven.compiler.source>/g; s/<maven.compiler.target>1.5<\/maven.compiler.target>/<maven.compiler.target>1.8<\/maven.compiler.target>/g' $project_folder/pom.xml
+	sed -i 's/<maven.compiler.source>1.6<\/maven.compiler.source>/<maven.compiler.source>1.8<\/maven.compiler.source>/g; s/<maven.compiler.target>1.6<\/maven.compiler.target>/<maven.compiler.target>1.8<\/maven.compiler.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.4<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.4<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.3<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.3<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.2<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.2<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
@@ -69,7 +70,7 @@ fixPomXML() {
 	fi
 	
 	SEVEN_T_TEST_FILE="$project_folder/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZNativeHeapTest.java"
-	if [ "$bug_id" == "41" ] && [ -f "$SEVEN_T_TEST_FILE" ]; then
+	if [[ "$bug_id" =~ ^(37|38|39|40|42)$ ]] && [ -f "$SEVEN_T_TEST_FILE" ]; then
 		ANNOTATION="@org.powermock.core.classloader.annotations.PowerMockIgnore({\"jdk.internal.reflect.*\", \"java.lang.*\", \"java.util.*\"})"
 		
 		sed -i "/public class SevenZNativeHeapTest/i $ANNOTATION" "$SEVEN_T_TEST_FILE"
