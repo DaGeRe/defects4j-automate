@@ -93,6 +93,15 @@ fixPomXML() {
 		' $project_folder/pom.xml > $project_folder/pom.xml.tmp && mv $project_folder/pom.xml.tmp $project_folder/pom.xml
 	fi
 	
+	if [[ "$project_folder" =~ /(Math_) ]]; then
+		plugin_block='<plugin><groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId><version>0.8.12</version><configuration><skip>true</skip></configuration></plugin>'
+		awk -v block="$plugin_block" '
+        /<build>/ { print; in_build = 1; next }
+        in_build && /<plugins>/ { print; print block; in_build = 0; next }
+        { print }
+		' $project_folder/pom.xml > $project_folder/pom.xml.tmp && mv $project_folder/pom.xml.tmp $project_folder/pom.xml
+	fi
+	
 	if [[ "$project_folder" == */Compress* ]] && [ "$bug_id" -gt 8 ]; then
 		plugin_block='      <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
