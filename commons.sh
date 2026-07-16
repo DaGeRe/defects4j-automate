@@ -75,6 +75,23 @@ fixPomXML() {
 		sed -i "/public class SevenZNativeHeapTest/i $ANNOTATION" "$SEVEN_T_TEST_FILE"
 	fi
 	
+	if [[ "$project_folder" == */JacksonCore* ]]; then
+		plugin_block='      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.15.0</version>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>'
+		awk -v block="$plugin_block" '
+        /<build>/ { print; in_build = 1; next }
+        in_build && /<plugins>/ { print; print block; in_build = 0; next }
+        { print }
+		' $project_folder/pom.xml > $project_folder/pom.xml.tmp && mv $project_folder/pom.xml.tmp $project_folder/pom.xml
+	fi
+	
 	if [[ "$project_folder" == */Compress* ]] && [ "$bug_id" -gt 8 ]; then
 		plugin_block='      <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
