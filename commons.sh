@@ -129,7 +129,7 @@ editSurefire() {
 				-t elem -n "configuration" -v ""   \
 				-s "//*[local-name()='plugin'][*[local-name()='artifactId']='maven-surefire-plugin']/*[local-name()='configuration'][not(*[local-name()='argLine'])]" \
 				-t elem -n "argLine" \
-				-v "$agent_path --add-opens=java.base/java.lang=ALL-UNNAMED" \
+				-v "--add-opens=java.base/java.lang=ALL-UNNAMED" \
 				$project_folder/pom.xml
 				
 			# Update existing <argLine>
