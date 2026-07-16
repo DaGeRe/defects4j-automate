@@ -42,6 +42,7 @@ getTestFromLogfile() {
 
 fixPomXML() {
 	PROJECTFOLDER=$1
+	bug_id=$2
 	echo "Fixing pom.xml"
 	sed -i 's/<maven.compile.source>1.6<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.6<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $PROJECTFOLDER/pom.xml
 	sed -i 's/<maven.compile.source>1.5<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.5<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $PROJECTFOLDER/pom.xml
@@ -62,5 +63,24 @@ fixPomXML() {
 		sed -i.bak "/<plugins>/a $COMPILER_PLUGIN" $PROJECTFOLDER/pom.xml
 	fi
 	
+	SEVEN_T_TEST_FILE="$PROJECTFOLDER/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZNativeHeapTest.java"
+	if [ "$bug_id" == "41" ] && [ -f "$SEVEN_T_TEST_FILE" ]; then
+		ANNOTATION="@org.powermock.core.classloader.annotations.PowerMockIgnore({\"jdk.internal.reflect.*\", \"java.lang.*\", \"java.util.*\"})"
+		
+		sed -i "/public class SevenZNativeHeapTest/i $ANNOTATION" "$SEVEN_T_TEST_FILE"
+	fi
+	
+	if [[ "$PROJECTFOLDER" == */Compress* ]] && [ "$bug_id" -gt 8 ]; then
+		plugin_block='      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:/home/reichelt/nvme/workspaces/kiekerworkspace/defects4j-automate/kieker-2.0.2-bytebuddy.jar --add-opens=java.base/java.lang=ALL-UNNAMED</argLine>
+        </configuration>
+      </plugin>'
+		awk -v block="$plugin_block" '/<build>/ { print; in_build = 1; next }
+    in_build && /<plugins>/ { print; print block; in_build = 0; next }
+    { print }
+			' $PROJECTFOLDER/pom.xml > $PROJECTFOLDER/pom.xml.tmp && mv $PROJECTFOLDER/pom.xml.tmp $PROJECTFOLDER/pom.xml
+	fi
 	cat $PROJECTFOLDER/pom.xml | grep "maven.compile"
 }

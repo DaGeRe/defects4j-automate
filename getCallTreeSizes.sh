@@ -89,7 +89,7 @@ do
 	fi
 	
 	if [ -f $PROJECTFOLDER/pom.xml ]; then
-		fixPomXML $PROJECTFOLDER
+		fixPomXML $PROJECTFOLDER $BUG
 		
 		(cd $PROJECTFOLDER/ && mvn clean test) &> $runfolder/before_"$BUG".txt
 		
