@@ -49,7 +49,7 @@ fixPomXML() {
 	sed -i 's/<maven.compiler.source>1.5<\/maven.compiler.source>/<maven.compiler.source>1.8<\/maven.compiler.source>/g; s/<maven.compiler.target>1.5<\/maven.compiler.target>/<maven.compiler.target>1.8<\/maven.compiler.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.4<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.4<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.3<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.3<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
-	sed -i 's/<maven.compile.source>1.2<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.2<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $PROJECTproject_folderFOLDER/pom.xml
+	sed -i 's/<maven.compile.source>1.2<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.2<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i 's/<maven.compile.source>1.1<\/maven.compile.source>/<maven.compile.source>1.8<\/maven.compile.source>/g; s/<maven.compile.target>1.1<\/maven.compile.target>/<maven.compile.target>1.8<\/maven.compile.target>/g' $project_folder/pom.xml
 	sed -i '/<artifactId>junit<\/artifactId>/{n;s/<version>3.8.1<\/version>/<version>4.13.2<\/version>/}' $project_folder/pom.xml
 	sed -i 's|<source>1.5</source>|<source>1.8</source>|g' $project_folder/pom.xml
