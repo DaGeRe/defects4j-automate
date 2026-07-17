@@ -99,4 +99,5 @@ do
 	echo
 	
 	rm -rf $PROJECTFOLDER
+	ps -aux | grep java | awk '{print $2}' | xargs kill -9 $1
 done
