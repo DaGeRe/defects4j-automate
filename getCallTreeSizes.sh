@@ -104,7 +104,7 @@ do
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
 			
 			(cd $PROJECTFOLDER && git checkout D4J_"$PROJECT"_"$bug_id"_FIXED_VERSION)
-			timeout --foreground 30m bash -c "(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$bug_id".txt)"
+			timeout --foreground 30m bash -c "(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$bug_id".txt"
 			
 			tracelength=$(cat /tmp/kieker*/kieker*.dat | wc -l)
 			uniquemethods=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $3}' | sort | uniq | wc -l)
