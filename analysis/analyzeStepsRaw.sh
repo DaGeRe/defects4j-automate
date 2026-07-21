@@ -1,7 +1,7 @@
 
 echo "# Expected; SuccesNoDoc; FailedGiveUp; AvgTokensSuccess; AvgTokensFailed"
 for i in 0 1 2 3 4 5 6 7; do
-	for project in Lang JacksonDatabind Jsoup; do
+	for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
 		for mode in uninformed semi-informed informed; do
 			info_file="iteration-$i/bugs_${project}_${mode}.txt"
 			# echo -n "$project-$mode "
@@ -13,7 +13,7 @@ for i in 0 1 2 3 4 5 6 7; do
 			count_failed_total=0
 			avg_tokens_success="0.0"
 			avg_tokens_failed="0.0"
-			for file in iteration-$i/runs_"$project"_"$mode"/fixing_*; do
+			find iteration-$i/runs_"$project"_"$mode"/ -maxdepth 1 -name "fixing_*" | sort -V | while read -r file; do
 				bug_id=$(basename "$file" | sed 's/fixing_//; s/\.txt//')
 				bug_was_fixed=$(awk -v id="$bug_id" '$1 == id {print $3}' "$info_file")
 				# echo -n "$file "

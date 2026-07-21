@@ -32,12 +32,13 @@ NR==FNR {
 {
     # Extrahiere Daten aus Datei 2 (Format: Lang [ID] TraceLength=... etc)
     bugid = $2;
-    trace = gensub(/TraceLength=([0-9]+)/, "\\1", "g", $3);
-    methods = gensub(/uniquemethods=([0-9]+)/, "\\1", "g", $4);
-    depth = gensub(/maxdepth=([0-9]+)/, "\\1", "g", $5);
+    testname = $3;
+    trace = gensub(/TraceLength=([0-9]+)/, "\\1", "g", $4);
+    methods = gensub(/uniquemethods=([0-9]+)/, "\\1", "g", $5);
+    depth = gensub(/maxdepth=([0-9]+)/, "\\1", "g", $6);
     
     if (bugid in prob) {
-        printf "%s %.4f %.4f %.4f %s %s %s\n", bugid, prob[bugid], steps[bugid], tokens[bugid], trace, methods, depth;
+        printf "%s %.4f %.4f %.4f %s %s %s %s\n", bugid, prob[bugid], steps[bugid], tokens[bugid], trace, methods, depth, testname;
     }
 }' temp_probs.txt temp_length.txt | grep -v "maxdepth=" >> $OUTPUT
 

@@ -9,8 +9,9 @@ NC='\033[0m'
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
-for project in Lang JacksonDatabind Jsoup; do
-	echo $project
+for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
+	bug_count=$(cat iteration-0/bugs_"$project"_uninformed.txt  | grep -v "skipped_no_maven\|skipped_no_failing_test" | wc -l)
+	echo "$project ($bug_count)"
 	uninformed_values=$("$SCRIPT_DIR/analyze.sh" $project | grep " uninformed" | awk '{print $3 / $5}' | getSum)
 	read -r deviation1 mean1 size1 <<< "$uninformed_values"
 
@@ -33,6 +34,6 @@ for project in Lang JacksonDatabind Jsoup; do
 		if (( $(echo "$abs_tvalue > $t_crit" | bc -l) )); then
 		    echo -e -n "$GREEN significant change $NC"
 		fi
-		echo
+		echo 
 	done
 done
