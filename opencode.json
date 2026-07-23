@@ -4,6 +4,10 @@
   "provider": {
     "ollama": {
       "models": {
+        "qwen3.6:27b": {
+	  "_launch": true,
+          "name": "qwen3.6"
+        },
         "gemma4:31b": {
           "_launch": true,
           "name": "gemma4-31b-ollama"
