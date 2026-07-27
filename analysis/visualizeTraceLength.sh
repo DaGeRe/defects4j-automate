@@ -9,7 +9,7 @@ echo "BugID FixProbability Steps Tokens TraceLength UniqueMethods MaxDepth" > $O
 
 cat raw.txt | grep $IDENTIFIER | awk '
 {
-    sum[$2] += ($3 == 0 ? 0 : 1);
+    sum[$2] += ($3 == 0 ? 1 : 0);
     count[$2]++;
     steps[$2] += $4+$5;
     tokens[$2] += $6;
@@ -40,6 +40,6 @@ NR==FNR {
     if (bugid in prob) {
         printf "%s %.4f %.4f %.4f %s %s %s %s\n", bugid, prob[bugid], steps[bugid], tokens[bugid], trace, methods, depth, testname;
     }
-}' temp_probs.txt temp_length.txt | grep -v "maxdepth=" >> $OUTPUT
+}' temp_probs.txt temp_length.txt >> $OUTPUT
 
 rm temp_probs.txt temp_length.txt

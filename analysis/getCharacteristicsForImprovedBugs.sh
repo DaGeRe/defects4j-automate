@@ -17,7 +17,7 @@ NR==FNR {
     val1[$1] = $2; 
     next 
 } 
-FNR>1 && ($1 in val1) && (val1[$1] - $2 < '$THRESHOLD') { 
+FNR>1 && ($1 in val1) && (val1[$1] - $2 < -'$THRESHOLD') { 
     diff = val1[$1] - $2;
     testname = $8;
     steps = $3;
@@ -33,7 +33,7 @@ FNR==1 {
     for (i=1; i<=NF; i++) head[i] = $i; 
     next 
 } 
-($1, 2) in val1 && (val1[$1, 2] - $2 < '$THRESHOLD') { 
+($1, 2) in val1 && (val1[$1, 2] - $2 < -'$THRESHOLD') { 
     count++; 
     for (i=2; i<=NF; i++) {
         sum1[i] += val1[$1, i];  # Summe für Datei 1 (uninformed)
