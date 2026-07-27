@@ -39,5 +39,6 @@ This yields a `tracelength.txt`, that contains `TraceLength`, `uniquemethods`, `
 To analyze this, different variants exist:
 
 - Plot the Steps / Token relation for individual fixes: Call `../analyzeStepsRaw.sh &> raw.txt` and `gnuplot -c plot.plt`.
-- Get correlation matrix per project: `for project in Lang JacksonDatabind Jsoup; do for mode in uninformed semi-informed informed; do echo $project"-"$mode; Rscript -e "d <- read.table('"results-$project-$mode.csv"', header=TRUE); options(width=200); print(cor(d))"; done; done`
+- Get a summary file for each project and mode: `for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do for mode in uninformed semi-informed informed; do visualizeTraceLength.sh $project $mode; done; done`
+- Get correlation matrix per project: `for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do for mode in uninformed semi-informed informed; do echo $project"-"$mode; Rscript -e "d <- read.table('results-$project-$mode.csv', header=TRUE); options(width=200); print(cor(d[, -ncol(d)]))"; done; done`
 - Get correlations matrix per mode: `for mode in uninformed semi-informed informed; do echo $mode; cat results-*-"$mode".csv | grep -v "BugID" &> merged_$mode.csv; Rscript -e "d <- read.table('"merged_$mode.csv"', header=TRUE); options(width=200); print(cor(d))"; done;`
