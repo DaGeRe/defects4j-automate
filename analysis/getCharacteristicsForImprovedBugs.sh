@@ -1,6 +1,15 @@
 FILE1=$1
 FILE2=$2
 
+if [ ! -f $FILE1 ]; then
+	echo "Please pass a results-... file that is expected to perform worse on version."
+	exit 1
+fi
+if [ ! -f $FILE2 ]; then
+	echo "Please pass a results-... file that is expected to perform better on bug fixing."
+	exit 1
+fi
+
 THRESHOLD=0.25
 
 awk '
@@ -33,7 +42,7 @@ FNR==1 {
 } 
 END { 
     if (count > 0) { 
-        print "Durchschnitte fuer gematchte Zeilen (Datei 1 / Datei 2):"; 
+        printf("Durchschnitte fuer gematchte Zeilen (Datei 1 / Datei 2 -- Count: %s):\n", count); 
         for (i=2; i<=NF; i++) {
             avg1 = sum1[i] / count;
             avg2 = sum2[i] / count;
