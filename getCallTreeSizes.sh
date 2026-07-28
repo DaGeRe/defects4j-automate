@@ -115,8 +115,7 @@ do
 			maxdepth=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $10}' | sort -n | tail -n 1)
 			topLevelCalls=$(cat /tmp/kieker*/kieker*.dat | grep ";0;0$" | wc -l)
 			echo "$PROJECT $bug_id $test TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth topLevelCalls=$topLevelCalls diffFileCount=$diffFileCount diffMethodCount=$diffMethodCount" >> tracelength.txt
-			
-			# rm -rf $PROJECTFOLDER
 		fi
 	fi
+	rm -rf $PROJECTFOLDER
 done
