@@ -103,6 +103,10 @@ do
 			editSurefire $PROJECT $PROJECTFOLDER $bug_id
 			echo "KIEKER_SIGNATURES_INCLUDE: $KIEKER_SIGNATURES_INCLUDE"
 			
+			diffFileCount=$(cd $PROJECTFOLDER && git diff --name-only D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION..D4J_"$PROJECT"_"$BUG"_FIXED_VERSION | grep .java | wc -l)
+			./getDifferingMethods.sh $PROJECTFOLDER D4J_"$PROJECT"_"$BUG"_BUGGY_VERSION D4J_"$PROJECT"_"$BUG"_FIXED_VERSION
+			diffMethodCount=$(jq -r 'to_entries[] | "\(.key)#\(.value.changedMethods | keys[])"' $PROJECTFOLDER/out.json | wc -l)
+			
 			(cd $PROJECTFOLDER && git checkout D4J_"$PROJECT"_"$bug_id"_FIXED_VERSION)
 			timeout --foreground 30m bash -c "(cd $PROJECTFOLDER/ && mvn clean test -Dtest=$test) &> $runfolder/gettrace_"$bug_id".txt"
 			
@@ -110,7 +114,7 @@ do
 			uniquemethods=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $3}' | sort | uniq | wc -l)
 			maxdepth=$(cat /tmp/kieker*/kieker*.dat | awk -F';' '{print $10}' | sort -n | tail -n 1)
 			topLevelCalls=$(cat /tmp/kieker*/kieker*.dat | grep ";0;0$" | wc -l)
-			echo "$PROJECT $bug_id $test TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth topLevelCalls=$topLevelCalls" >> tracelength.txt
+			echo "$PROJECT $bug_id $test TraceLength=$tracelength uniquemethods=$uniquemethods maxdepth=$maxdepth topLevelCalls=$topLevelCalls diffFileCount=$diffFileCount diffMethodCount=$diffMethodCount" >> tracelength.txt
 			
 			# rm -rf $PROJECTFOLDER
 		fi
