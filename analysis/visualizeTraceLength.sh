@@ -5,7 +5,7 @@ MODE=$2
 IDENTIFIER=$1"-"$MODE
 OUTPUT="results-$IDENTIFIER.csv"
 
-echo "BugID FixProbability Steps Tokens TraceLength UniqueMethods MaxDepth DiffFileCount DiffMethodCount" > $OUTPUT
+echo "BugID FixProbability Steps Tokens TraceLength UniqueMethods MaxDepth DiffFileCount DiffMethodCount Test" > $OUTPUT
 
 cat raw.txt | grep $IDENTIFIER | awk '
 {
