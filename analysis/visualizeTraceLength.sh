@@ -5,7 +5,7 @@ MODE=$2
 IDENTIFIER=$1"-"$MODE
 OUTPUT="results-$IDENTIFIER.csv"
 
-echo "BugID FixProbability Steps Tokens TraceLength UniqueMethods MaxDepth" > $OUTPUT
+echo "BugID FixProbability Steps Tokens TraceLength UniqueMethods MaxDepth DiffFileCount DiffMethodCount" > $OUTPUT
 
 cat raw.txt | grep $IDENTIFIER | awk '
 {
@@ -36,9 +36,11 @@ NR==FNR {
     trace = gensub(/TraceLength=([0-9]+)/, "\\1", "g", $4);
     methods = gensub(/uniquemethods=([0-9]+)/, "\\1", "g", $5);
     depth = gensub(/maxdepth=([0-9]+)/, "\\1", "g", $6);
+    diffFileCount = gensub(/diffFileCount=([0-9]+)/, "\\1", "g", $8);
+    diffMethodCount = gensub(/diffMethodCount=([0-9]+)/, "\\1", "g", $9);
     
     if (bugid in prob) {
-        printf "%s %.4f %.4f %.4f %s %s %s %s\n", bugid, prob[bugid], steps[bugid], tokens[bugid], trace, methods, depth, testname;
+        printf "%s %.4f %.4f %.4f %s %s %s %s %s %s\n", bugid, prob[bugid], steps[bugid], tokens[bugid], trace, methods, depth, diffFileCount, diffMethodCount, testname;
     }
 }' temp_probs.txt temp_length.txt >> $OUTPUT
 
