@@ -9,11 +9,20 @@ NC='\033[0m'
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
+uninformedSum=0
+semiinformedSum=0
+informedSum=0
+overallSum=0
+
 for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
 	bug_count=$(cat iteration-0/bugs_"$project"_uninformed.txt  | grep -v "skipped_no_maven\|skipped_no_failing_test" | wc -l)
 	echo "$project ($bug_count)"
 	uninformed_values=$("$SCRIPT_DIR/analyze.sh" $project | grep " uninformed" | awk '{print $3 / $5}' | getSum)
 	read -r deviation1 mean1 size1 <<< "$uninformed_values"
+	(( uninformedSum += $("$SCRIPT_DIR/analyze.sh" "$project" | grep " uninformed" | awk '{print $3}' | getSum | awk '{printf "%.0f", $2}') ))
+	(( semiinformedSum += $("$SCRIPT_DIR/analyze.sh" "$project" | grep "semi-informed" | awk '{print $3}' | getSum | awk '{printf "%.0f", $2}') ))
+	(( informedSum += $("$SCRIPT_DIR/analyze.sh" "$project" | grep " informed" | awk '{print $3}' | getSum | awk '{printf "%.0f", $2}') ))
+	(( overallSum += $("$SCRIPT_DIR/analyze.sh" "$project" | grep " uninformed" | awk '{print $5}' | getSum | awk '{printf "%.0f", $2}') ))
 
 	echo -n "uninformed "
 	echo $uninformed_values | awk '{printf "%.1f ± %.1f", $2 * 100, $1 * 100}'
@@ -37,3 +46,21 @@ for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
 		echo 
 	done
 done
+
+echo "Sums: $uninformedSum $semiinformedSum $informedSum $overallSum"
+
+echo -n "uninformed "
+for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
+	"$SCRIPT_DIR/analyze.sh" $project | grep " uninformed" | awk '{print $3 / $5}'
+done | getSum | awk '{printf "%.1f ± %.1f\n", $2 * 100, $1 * 100}'
+
+echo -n "semi-informed "
+for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
+	"$SCRIPT_DIR/analyze.sh" $project | grep " semi-informed" | awk '{print $3 / $5}'
+done | getSum | awk '{printf "%.1f ± %.1f\n", $2 * 100, $1 * 100}'
+
+echo -n "informed "
+for project in Cli Compress JacksonCore JacksonDatabind Jsoup Lang Time; do
+	"$SCRIPT_DIR/analyze.sh" $project | grep " informed" | awk '{print $3 / $5}'
+done | getSum | awk '{printf "%.1f ± %.1f\n", $2 * 100, $1 * 100}'
+
